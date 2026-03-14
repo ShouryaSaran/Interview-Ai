@@ -1,0 +1,17 @@
+<svg width="26" height="26" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-iconid="490974" data-svgname="Add stroke">
+    <title fill="#1754cf" style="fill: rgb(23, 84, 207);">Add-Stroke</title>
+    <g id="Page-1" stroke="#1754cf" stroke-width="1" fill="none" fill-rule="evenodd" style="stroke: rgb(23, 84, 207); fill: none;">
+        <g id="Add-Stroke" stroke="#1754cf" stroke-width="2" fill="none" style="stroke: rgb(23, 84, 207); fill: none;">
+            
+            <circle id="Oval" stroke="#1754cf" stroke-width="2" stroke-linecap="round" cx="12" cy="12" r="9" fill="none" style="stroke: rgb(23, 84, 207); fill: none;">
+
+</circle>
+            <line x1="12" y1="9" x2="12" y2="15" id="Path" stroke="#1754cf" stroke-width="2" stroke-linecap="round" fill="none" style="stroke: rgb(23, 84, 207); fill: none;">
+
+</line>
+            <line x1="9" y1="12" x2="15" y2="12" id="Path" stroke="#1754cf" stroke-width="2" stroke-linecap="round" fill="none" style="stroke: rgb(23, 84, 207); fill: none;">
+
+</line>
+        </g>
+    </g>
+</svg>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../styles/Home.scss";
 import Rocket_launch from "../../../assets/rocket_launch.svg"
 import auto_awesome from "../../../assets/auto_awesome.svg"
@@ -8,7 +8,7 @@ import psychology from "../../../assets/psychology.svg"
 import quiz from "../../../assets/quiz.svg"
 import analytics from "../../../assets/analytics.svg"
 import generate from "../../../assets/generate.svg"
-import { Link,useNavigate } from "react-router-dom";
+import { Link } from "react-router";
 
 
 
@@ -21,7 +21,7 @@ function Home() {
   };
 
   return (
-    <>
+    <div className="Home-Page">
       {/* Top Navigation Bar */}
       <header className="navbar">
         <div className="navbar__inner">
@@ -35,11 +35,10 @@ function Home() {
             <a href="#">Practice</a>
             <a href="#">Analysis</a>
             <a href="#">Reports</a>
-            <a href="#">Pricing</a>
           </nav>
           <div className="navbar__auth">
-            <button className="btn btn--ghost">Log In</button>
-            <button className="btn btn--primary">Sign Up</button>
+            <Link to={'/login'} className="btn btn--ghost">Log In</Link>
+            <Link to={'/register'} className="btn btn--primary">Sign Up</Link>
           </div>
         </div>
       </header>
@@ -60,8 +59,7 @@ function Home() {
               practice tools designed for modern professionals.
             </p>
             <div className="hero__actions">
-              <button className="btn btn--primary btn--lg">Get Started Free</button>
-              <button className="btn btn--outline btn--lg">Watch Demo</button>
+              <button className="btn btn--primary btn--lg">Get Started</button>
             </div>
           </div>
 
@@ -201,7 +199,7 @@ function Home() {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
 
