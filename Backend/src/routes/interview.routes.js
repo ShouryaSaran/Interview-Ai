@@ -10,4 +10,13 @@ const upload = require('../Middlewares/file.middleware')
  */
 
 interviewRouter.post("/", authMiddleware.authUser, upload.single("resume"), interviewController.generateInterViewReportController)
+
+
+/**
+ * @route Get /inerview/reports
+ * @description Get all the interview reports that the user has generated in the past
+ * @access PRIVATE
+ */
+interviewRouter.get("/reports",authMiddleware.authUser,interviewController.getInterviewReportController)
+
 module.exports = interviewRouter

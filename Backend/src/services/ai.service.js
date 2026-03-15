@@ -5,6 +5,10 @@ const ai = new GoogleGenAI({ apiKey: process.env.GenAI_API_KEY });
 const interviewReportSchema = {
   type: "object",
   properties: {
+    title: {
+      type: "string",
+      description: "Title of the job this interview report is about"
+    },
     matchScore: {
       type: "number",
       description: "A score between 0 and 100 indicating how well the candidate's profile matches the job description",

@@ -1,11 +1,45 @@
 import React, { useRef, useState } from "react";
 import "../styles/dashboard.scss";
-import { Link } from "react-router-dom";
+import { useAuth } from "../../auth/hooks/useAuth.js";
+import ViewReport from "../components/ViewReport.jsx";
 
 export default function Dashboard() {
   const [resumeFile, setResumeFile] = useState(null);
   const resumeInputRef = useRef(null);
-  const [active, setActive] = useState("dashboard");
+  const [active, setActive] = useState('dashboard');
+  const [reports, setReports] = useState([]);
+  const Auth = useAuth();
+  const [viewReport, setViewReport] = useState(null);
+
+  const handleViewReport = (report) => {
+    if (!report) return;
+    setViewReport(report);
+    setActive('viewReport');
+  };
+  const getInitials = (name) => {
+  return name
+    .split(" ")
+    .map(word => word[0])
+    .join("")
+    .toUpperCase()
+}
+  const fetchReports = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/interview/reports",
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
+      const data = await response.json()
+      setReports(data.reports || [])
+      console.log(reports);
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  };
   const handleBrowseFilesClick = () => {
     resumeInputRef.current?.click();
   };
@@ -45,31 +79,39 @@ export default function Dashboard() {
 
           <nav className="sidebar-nav">
             <div
-              className="nav-link nav-link--active"
+              className={`nav-link ${active === "dashboard" ? "nav-link--active" : ""}`}
               onClick={() => setActive("dashboard")}
             >
               <span className="material-symbols-outlined">dashboard</span>
               <span>Dashboard</span>
             </div>
-            <div className="nav-link" onClick={() => setActive('Interview')}>
+            <div
+              className={`nav-link ${active === "Interview" ? "nav-link--active" : ""}`}
+              onClick={() => {
+                fetchReports();
+                setActive("Interview");
+              }}
+            >
               <span className="material-symbols-outlined">calendar_today</span>
               <span>Interviews</span>
             </div>
-            <div className="nav-link" onClick={() => setActive('Resources')}>
+            <div
+              className={`nav-link ${active === "Resources" ? "nav-link--active" : ""}`}
+              onClick={() => setActive("Resources")}
+            >
               <span className="material-symbols-outlined">menu_book</span>
               <span>Resources</span>
             </div>
-            <div className="nav-link" onClick={() => setActive('Analytics')}>
+            <div
+              className={`nav-link ${active === "Analytics" ? "nav-link--active" : ""}`}
+              onClick={() => setActive("Analytics")}
+            >
               <span className="material-symbols-outlined">analytics</span>
               <span>Analytics</span>
             </div>
-            <div className="nav-link" onClick={() => setActive('Settings')}>
-              <span className="material-symbols-outlined">settings</span>
-              <span>Settings</span>
-            </div>
           </nav>
         </div>
-
+        <div className="bar"></div>
         <div className="sidebar-left__footer">
           <div className="upgrade-card">
             <p className="upgrade-card__title">Pro Plan</p>
@@ -192,7 +234,7 @@ export default function Dashboard() {
                   </span>
                 </button>
                 <p className="cta-note">
-                  Estimated generation time: 15–20 seconds
+                  Estimated generation time: 15-20 seconds
                 </p>
               </div>
             </div>
@@ -280,13 +322,99 @@ export default function Dashboard() {
         </main>
       )}
 
-      {active === 'interview' && 
-        <main className="Interview_reports">
-          
-        
+      {active === "Interview" && (
+        <main className="main-content">
+          <div className="interview-page">
+          <div className="interview-header">
+            <div className="interview-header__left">
+              <div className="title-block">
+                <span className="material-symbols-outlined">chevron_right</span>
+                <div>
+                  <h2>My Reports</h2>
+                  <p>Comprehensive review of your AI-simulated interview performance.</p>
+                </div>
+              </div>
+            </div>
+            <div className="interview-header__right">
+              <button className="icon-btn" aria-label="Notifications">
+                <span className="material-symbols-outlined">notifications</span>
+              </button>
+              <div className="user-chip">
+                <div className="user-name">{Auth.user.username}</div>
+                <div>
+                  <span className="avatar">{getInitials(Auth.user.username)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="reports-toolbar">
+            <div className="search-box">
+              <span className="material-symbols-outlined">search</span>
+              <input type="text" placeholder="Search reports..." />
+            </div>
+            <div className="toolbar-actions">
+              <button className="btn-outline">
+                <span className="material-symbols-outlined">download</span>
+                Export CSV
+              </button>
+              <button className="btn-primary">
+                <span className="material-symbols-outlined">add</span>
+                New Interview
+              </button>
+            </div>
+          </div>
+
+          <section className="reports-table">
+            <div className="reports-head-row">
+              <span>Job Title</span>
+              <span>Interview Date</span>
+              <span>Match Score</span>
+              <span>Status</span>
+              <span>Action</span>
+            </div>
+
+            {reports.length === 0 ? (
+              <div className="empty-row">No reports yet. Run a mock interview to generate your first report.</div>
+            ) : (
+              reports.map((report) => (
+                <div key={report._id || report.id || Math.random()} className="reports-row">
+                  <div className="job-cell">
+                    <div className="job-title">{report.title || report.jobTitle || "Senior Frontend Engineer"}</div>
+                    <div className="job-sub">{report.skills || report.jobSkills || "React, Node.js, CSS"}</div>
+                  </div>
+                  <div>{new Date(report.createdAt || report.date || Date.now()).toLocaleDateString()}</div>
+                  <div>
+                    <div className="score-pill">
+                      <div className="score-track">
+                        <div className="score-fill" style={{ width: `${report.matchScore || report.match || 82}%` }} />
+                      </div>
+                      <span className="score-text">{report.matchScore || report.match || 82}%</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span className={`status-pill ${report.status?.toLowerCase() || "completed"}`}>
+                      {report.status || "COMPLETED"}
+                    </span>
+                  </div>
+                  <div>
+                    <button className="link-btn" onClick={() => handleViewReport(report)}>View Report</button>
+                  </div>
+                </div>
+              ))
+            )}
+          </section>
+        </div>
+      </main>
+      )}
+
+      {active === "viewReport" && viewReport && (
+        <main className="main-content">
+          <div className="main-scroll no-scrollbar">
+            <ViewReport report={viewReport} onBack={() => setActive("Interview")} />
+          </div>
         </main>
-      
-      }
+      )}
     </div>
   );
 }
