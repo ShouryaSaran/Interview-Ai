@@ -92,7 +92,6 @@ export default function ViewReport({ report = {}, onBack }) {
         <div className="hero-content">
           <h2>{title}</h2>
           <p>{jobDescription}</p>
-          <p className="hero-trend">↗ +5% vs last week</p>
         </div>
       </div>
 
