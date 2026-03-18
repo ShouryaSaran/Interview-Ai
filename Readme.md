@@ -56,22 +56,6 @@ A full-stack AI-powered web application designed to help developers prepare for 
 
         MongoDB
 
-📂 Project Structure
-
-InterviewIQ/
-    client/              # React frontend
-       src/
-          public/
-    server/              # Node.js backend
-     controllers/
-          routes/
-          models/
-          middleware/
-          .env
-          package.json
-    README.md
-
-
 ⚙️ Installation & Setup
 1️⃣ Clone the repository
     git clone https://github.com/your-username/interviewiq.git
