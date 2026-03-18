@@ -40,9 +40,9 @@ A full-stack AI-powered web application designed to help developers prepare for 
 
     Backend
 
-    Node.js
-
-    Express.js
+        Node.js
+    
+        Express.js
 
     Authentication
 
