@@ -1,16 +1,26 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import "../styles/dashboard.scss";
 import { useAuth } from "../../auth/hooks/useAuth.js";
 import ViewReport from "../components/ViewReport.jsx";
+import { useInterview } from "../hooks/useInterview.js";
+import { Link } from "react-router";
 
 export default function Dashboard() {
+  const [jobDescription,setJobDescription] = useState("")
+  const [selfDescription,setSelfDescription] = useState("")
   const [resumeFile, setResumeFile] = useState(null);
   const resumeInputRef = useRef(null);
+
   const [active, setActive] = useState('dashboard');
-  const [reports, setReports] = useState([]);
+  const {reports,loading,generateReport,fetchReports} = useInterview()
   const Auth = useAuth();
   const [viewReport, setViewReport] = useState(null);
 
+  const handleGenerateReport = async()=>{
+    const resumeFile = resumeInputRef.current.files[0]
+    const data = await generateReport({resumeFile,jobDescription,selfDescription})
+    handleViewReport(data)
+  }
   const handleViewReport = (report) => {
     if (!report) return;
     setViewReport(report);
@@ -23,23 +33,7 @@ export default function Dashboard() {
     .join("")
     .toUpperCase()
 }
-  const fetchReports = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:3000/api/interview/reports",
-        {
-          method: "GET",
-          credentials: "include",
-        },
-      );
-      const data = await response.json()
-      setReports(data.reports || [])
-      console.log(reports);
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
-  };
+
   const handleBrowseFilesClick = () => {
     resumeInputRef.current?.click();
   };
@@ -62,7 +56,9 @@ export default function Dashboard() {
   const handleDragOver = (event) => {
     event.preventDefault();
   };
-
+  const onLogout = () => {
+    Auth.handleLogout();
+  }
   return (
     <div className="dashboard-root">
       <aside className="sidebar-left">
@@ -88,29 +84,17 @@ export default function Dashboard() {
             <div
               className={`nav-link ${active === "Interview" ? "nav-link--active" : ""}`}
               onClick={() => {
-                fetchReports();
+                fetchReports()
                 setActive("Interview");
               }}
             >
               <span className="material-symbols-outlined">calendar_today</span>
               <span>Interviews</span>
             </div>
-            <div
-              className={`nav-link ${active === "Resources" ? "nav-link--active" : ""}`}
-              onClick={() => setActive("Resources")}
-            >
-              <span className="material-symbols-outlined">menu_book</span>
-              <span>Resources</span>
-            </div>
-            <div
-              className={`nav-link ${active === "Analytics" ? "nav-link--active" : ""}`}
-              onClick={() => setActive("Analytics")}
-            >
-              <span className="material-symbols-outlined">analytics</span>
-              <span>Analytics</span>
-            </div>
           </nav>
+          <div className="logout" onClick={onLogout}><Link className="logout-link" to={'/'}>Logout</Link></div>
         </div>
+        
         <div className="bar"></div>
         <div className="sidebar-left__footer">
           <div className="upgrade-card">
@@ -168,6 +152,7 @@ export default function Dashboard() {
                     </button>
                     <input
                       ref={resumeInputRef}
+                      id="resume"
                       type="file"
                       accept=".pdf,.doc,.docx"
                       style={{ display: "none" }}
@@ -194,6 +179,8 @@ export default function Dashboard() {
                     relevant technical skills and cultural alignment.
                   </p>
                   <textarea
+                    onChange={(e) => setJobDescription(e.target.value)}
+                    id="JobDescription"
                     className="input-textarea"
                     placeholder="e.g. Senior Software Engineer at TechCorp. Requirements include 5+ years experience with React, Node.js, and Distributed Systems..."
                     rows={8}
@@ -219,6 +206,8 @@ export default function Dashboard() {
                     areas you want to practice, or unique achievements.
                   </p>
                   <textarea
+                    onChange={(e) => setSelfDescription(e.target.value)}
+                    id="selfDescription"
                     className="input-textarea"
                     placeholder="Tell us more about yourself or specific focus areas..."
                     rows={5}
@@ -227,7 +216,7 @@ export default function Dashboard() {
               </section>
 
               <div className="cta-section">
-                <button className="cta-btn">
+                <button onClick={handleGenerateReport} className="cta-btn">
                   <span>Generate Mock Interview</span>
                   <span className="material-symbols-outlined">
                     auto_awesome
@@ -354,11 +343,9 @@ export default function Dashboard() {
               <input type="text" placeholder="Search reports..." />
             </div>
             <div className="toolbar-actions">
-              <button className="btn-outline">
-                <span className="material-symbols-outlined">download</span>
-                Export CSV
-              </button>
-              <button className="btn-primary">
+              <button
+              onClick={()=>setActive('dashboard')}
+              className="btn-primary">
                 <span className="material-symbols-outlined">add</span>
                 New Interview
               </button>
@@ -370,7 +357,6 @@ export default function Dashboard() {
               <span>Job Title</span>
               <span>Interview Date</span>
               <span>Match Score</span>
-              <span>Status</span>
               <span>Action</span>
             </div>
 
@@ -387,16 +373,11 @@ export default function Dashboard() {
                   <div>
                     <div className="score-pill">
                       <div className="score-track">
-                        <div className="score-fill" style={{ width: `${report.matchScore || report.match || 82}%` }} />
+                        <div className="score-fill" style={{ width: `${report.matchScore || report.match}%` }} />
                       </div>
-                      <span className="score-text">{report.matchScore || report.match || 82}%</span>
+                      <span className="score-text">{report.matchScore || report.match}%</span>
                     </div>
-                  </div>
-                  <div>
-                    <span className={`status-pill ${report.status?.toLowerCase() || "completed"}`}>
-                      {report.status || "COMPLETED"}
-                    </span>
-                  </div>
+                  </div>  
                   <div>
                     <button className="link-btn" onClick={() => handleViewReport(report)}>View Report</button>
                   </div>
