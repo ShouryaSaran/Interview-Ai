@@ -59,20 +59,17 @@ A full-stack AI-powered web application designed to help developers prepare for 
 📂 Project Structure
 
 InterviewIQ/
-│
-├── client/              # React frontend
-│   ├── src/
-│   └── public/
-│
-├── server/              # Node.js backend
-│   ├── controllers/
-│   ├── routes/
-│   ├── models/
-│   └── middleware/
-│
-├── .env
-├── package.json
-└── README.md
+    client/              # React frontend
+       src/
+          public/
+    server/              # Node.js backend
+     controllers/
+          routes/
+          models/
+          middleware/
+          .env
+          package.json
+    README.md
 
 
 ⚙️ Installation & Setup
