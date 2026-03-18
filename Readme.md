@@ -57,29 +57,29 @@ A full-stack AI-powered web application designed to help developers prepare for 
         MongoDB
 
 ⚙️ Installation & Setup
-    1️⃣ Clone the repository
-        git clone https://github.com/your-username/interviewiq.git
-    cd interviewiq
+        1️⃣ Clone the repository
+            git clone https://github.com/your-username/interviewiq.git
+        cd interviewPrep
         2️⃣ Install dependencies
-    For backend:
-        cd server
-        npm install
-    For frontend:
-        cd client
-        npm install
-    3️⃣ Setup environment variables
-        Create a .env file in the server folder:
-            PORT=5000
-            MONGO_URI=your_mongodb_connection
-            JWT_SECRET=your_secret_key
-            GEMINI_API_KEY=your_google_gemini_api_key
-    4️⃣ Run the application
-        Start backend:
-            cd server
-            npx nodemon server.js || npm --watch server.js
-        Start frontend:
-            cd client
-            npm run dev
+            For backend:
+                cd server
+                npm install
+            For frontend:
+                cd client
+                npm install
+        3️⃣ Setup environment variables
+            Create a .env file in the server folder:
+                PORT=5000
+                MONGO_URI=your_mongodb_connection
+                JWT_SECRET=your_secret_key
+                GEMINI_API_KEY=your_google_gemini_api_key
+        4️⃣ Run the application
+            Start backend:
+                cd server
+                npx nodemon server.js || npm --watch server.js
+            Start frontend:
+                cd client
+                npm run dev
 
 🔑 API Endpoints (Sample)
     Method	 |   Endpoint	              |      Description
